@@ -1,0 +1,212 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <title>(v2) Bambuser Live Video Shopping Embed Example</title>
+    <style>
+      body {
+        background: black;
+        color: white;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        height: 100vh;
+        margin: 0;
+        padding: 0;
+      }
+
+      #DemoContainer {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+      }
+    </style>
+    <script>
+      function getQueryParameterByName(name, url) {
+        if (!url) url = window.location.href;
+        name = name.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+          results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return "";
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
+      }
+
+      // Detect User-Agent OS
+      // Modify if you are using custom User-Agent
+      var userAgent = window.navigator.userAgent.toLowerCase(),
+        isIos = userAgent.match(/iphone|ipod|ipad/),
+        isAndroid = userAgent.includes("android");
+
+      // Bambuser Integration
+      (function () {
+        // Player Config and Event Handlers
+        window.onBambuserLiveShoppingReady = function (player) {
+          player.configure({
+            buttons: {
+              dismiss: player.BUTTON.CLOSE,
+              product: player.BUTTON.NONE, // Prevent URL request on product click
+            },
+            currency: isAndroid
+              ? Android.getCurrentCurrency()
+              : isIos
+              ? iosAppConfig.currency
+              : "USD",
+            locale: isAndroid
+              ? Android.getCurrentLocale()
+              : isIos
+              ? iosAppConfig.locale
+              : "en-US",
+            ui: {
+              hideAddToCalendar: true, // To be replaced with native AddToCalendar
+              hideShareView: true, // To be replaced with native share
+              hideCartView: true, // Native cart can be overlaid instead
+              hideCartButton: false, // If necessary
+            },
+            checkoutOnCartClick: true, // Trigger .CHECKOUT event when the cart/bag icon is clicked
+          });
+
+          // Registering event listeners ↓
+          player.on(player.EVENT.READY, function () {
+            if (isIos) {
+              window.webkit.messageHandlers.bambuserEventHandler.postMessage({
+                eventName: "player.EVENT.READY",
+              });
+            } else if (isAndroid) {
+              Android.showToast("The player is ready!");
+            }
+          });
+
+          player.on(player.EVENT.CLOSE, function () {
+            if (isIos) {
+              window.webkit.messageHandlers.bambuserEventHandler.postMessage({
+                eventName: "player.EVENT.CLOSE",
+                message: "The player has been closed!",
+              });
+            } else if (isAndroid) {
+              Android.showToast("The player has been closed!");
+              Android.handleClose();
+            }
+          });
+
+          player.on(player.EVENT.SHOW_PRODUCT_VIEW, (event) => {
+            console.log("SHOW_PRODUCT_VIEW", event);
+            if (isIos) {
+              window.webkit.messageHandlers.bambuserEventHandler.postMessage({
+                eventName: "player.EVENT.SHOW_PRODUCT_VIEW",
+                data: event,
+              });
+            } else if (isAndroid) {
+              Android.showToast(`Product (id: ${event.sku}) has been clicked!`);
+            }
+          });
+
+          player.on(player.EVENT.SHOW_SHARE, (event, callback) => {
+            console.log("SHOW_SHARE", event);
+            if (isIos) {
+              window.webkit.messageHandlers.bambuserEventHandler.postMessage({
+                eventName: "player.EVENT.SHOW_SHARE",
+                data: event,
+              });
+            } else if (isAndroid) {
+              Android.share(JSON.stringify(event));
+            }
+          });
+
+          player.on(player.EVENT.SHOW_ADD_TO_CALENDAR, (event) => {
+            console.log("SHOW_ADD_TO_CALENDAR", event);
+            if (isIos) {
+              window.webkit.messageHandlers.bambuserEventHandler.postMessage({
+                eventName: "player.EVENT.SHOW_ADD_TO_CALENDAR",
+                data: event,
+              });
+            } else if (isAndroid) {
+              Android.addToCalendar(JSON.stringify(event));
+            }
+          });
+
+          // Additional available events
+          player.on(player.EVENT.CHECKOUT, (event) => {
+            console.log("CHECKOUT", event);
+          });
+          
+          player.on(player.EVENT.PLAYER_SWIPE_DOWN, (event) => {
+            console.log("PLAYER SWIPE DOWN", event);
+          });
+
+          player.on(player.EVENT.PLAYER_SWIPE_LEFT, (event) => {
+            console.log("PLAYER SWIPE LEFT", event);
+          });
+
+          player.on(player.EVENT.PLAYER_SWIPE_RIGHT, (event) => {
+            console.log("PLAYER SWIPE RIGHT", event);
+          });
+
+          player.on(player.EVENT.PLAYER_SWIPE_UP, (event) => {
+            console.log("PLAYER SWIPE UP", event);
+          });
+
+          player.on(player.EVENT.SHOW_PRODUCT_LIST, () => {
+            console.log("SHOW_PRODUCT_LIST");
+          });
+
+          player.on(player.EVENT.HIDE_PRODUCT_LIST, () => {
+            console.log("HIDE_PRODUCT_LIST");
+          });
+        };
+      })();
+    </script>
+  </head>
+
+  <body>
+    <div id="DemoContainer">
+      <p class="demo-label">
+        This is a webpage to be rendered inside a WebView! <br />
+        You can remove this text when ready to launch.
+      </p>
+    </div>
+    <script>
+      (function () {
+        // Instantiate the embed script
+        if (!window.initBambuserLiveShopping) {
+          window.initBambuserLiveShopping = function (item) {
+            window.initBambuserLiveShopping.queue.push(item);
+          };
+          window.initBambuserLiveShopping.queue = [];
+          var scriptNode = document.createElement("script");
+          // If you received a custom embed URL for your brand, replace the below URL by yours.
+          scriptNode["src"] =
+            "https://lcx-embed.bambuser.com/powered-by-bambuser-theme/embed.js";
+          document.body.appendChild(scriptNode);
+        }
+
+        // Read the showID from query params
+        var showId = getQueryParameterByName("eventId");
+        
+        if (!showId) {
+          // Autoplays a default show
+          window.initBambuserLiveShopping({
+            showId: "vAtJH3xevpYTLnf1oHao",
+            type: "overlay",
+            disableClickOutsideBehavior: true, // Tapping on the loading spinner will not terminate the player
+          });
+        } else {
+          window.initBambuserLiveShopping({
+            showId,
+            type: "overlay",
+            disableClickOutsideBehavior: true,
+          });
+        }
+      })();
+    </script>
+  </body>
+</html>
