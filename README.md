@@ -1,6 +1,13 @@
 # Example WebView projects
 Simple example projects for demonstrating how to embed and integrate Bambuser Live Video Shopping player (One-to-Many) in your native app.
 
+## Who is this for?
+This project is for you if you have all the below applies to you.
+- You work for a customer of Bambuser
+- Your organization have a licence for Live Video Shopping One-to-many product
+- You are a developer
+- You are going to integrate Bambuser One-to-Many player into your mobile app 
+
 ## Project structure
 .  
 ├── Android  
