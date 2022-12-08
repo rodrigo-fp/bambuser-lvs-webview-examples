@@ -70,7 +70,7 @@ extension BambuserPlayer: WKScriptMessageHandler, WKUIDelegate {
 
         guard let eventName = body["eventName"] as? String else { return }
 
-        eventHandler?(Event(eventName: eventName))
+        eventHandler?(Event(eventName: eventName, data: body["data"]))
     }
 
     /// This function is used to communicate message to the JS
