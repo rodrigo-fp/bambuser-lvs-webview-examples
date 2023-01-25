@@ -39,8 +39,8 @@ class BambuserPlayer: WKWebView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    /// Load show url into the player
-    public func loadShow(_ show: Show, eventHandler: @escaping EventHandlerClosure) throws {
+    /// Load embeded player
+    public func loadEmbeddedPlayer(_ show: EmbeddedPlayerUrl, eventHandler: @escaping EventHandlerClosure) throws {
         self.eventHandler = eventHandler
         guard let showURL = show.showUrl() else {
             throw BambuserPlayerError.invalidShowURL
@@ -166,7 +166,7 @@ extension BambuserPlayer: WKNavigationDelegate {
 // MARK: BambuserPlayer models
 
 extension BambuserPlayer {
-    enum Show {
+    enum EmbeddedPlayerUrl {
         case show(_ eventId: String)
         case customUrl(_ customUrl: String)
 

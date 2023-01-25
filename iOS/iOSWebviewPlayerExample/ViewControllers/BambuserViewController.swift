@@ -29,19 +29,19 @@ class BambuserViewController: UIViewController {
 
         do {
             // 1. Recorded show:
-//            try player.loadShow(
+//            try player.loadEmbeddedPlayer(
 //                .customUrl("https://demo.bambuser.shop/content/webview-landing-v2.html"),
 //                eventHandler: { self.handleEvent($0) }
 //            )
 
             // 2. Live Show (fake live for testing chat)
-            try player.loadShow(
+            try player.loadEmbeddedPlayer(
                 .customUrl("https://demo.bambuser.shop/content/webview-landing-v2.html?mockLiveBambuser=true"),
                 eventHandler: { self.handleEvent($0) }
             )
 
             // 3. Countdown - Scheduled show:
-//            try player.loadShow(
+//            try player.loadEmbeddedPlayer(
 //                .show("2iduPdz2hn6UKd0eQmJq"),
 //                eventHandler: { self.handleEvent($0) }
 //            )
