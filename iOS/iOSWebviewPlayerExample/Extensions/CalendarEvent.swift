@@ -7,28 +7,7 @@
 
 import EventKit
 
-struct CalendarEvent: Equatable {
-    /**
-     Create an audio session configuration
-
-     - Parameters:
-       - title: The calendar event title
-       - startDate: The calendar event start date
-       - endDate: The calendar event end date
-       - url: The url to add to the event
-     */
-    public init(
-        title: String,
-        description: String,
-        startDate: Date,
-        endDate: Date,
-        url: URL) {
-        self.title = title
-        self.description = description
-        self.startDate = startDate
-        self.endDate = endDate
-        self.url = url
-    }
+struct CalendarEvent: Decodable, Equatable {
 
     /**
      The calendar event title.
@@ -54,6 +33,35 @@ struct CalendarEvent: Equatable {
      The url to add to the event.
      */
     public let url: URL
+
+    enum CodingKeys: String, CodingKey {
+        case title, description, start, duration, url
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        let dateFormatter = ISO8601DateFormatter()
+        dateFormatter.formatOptions.insert(.withFractionalSeconds)
+
+        title = try container.decode(String.self, forKey: .title)
+        description = try container.decode(String.self, forKey: .description)
+
+        let startDateString = try container.decode(String.self, forKey: .start)
+        guard let formattedStartDate = dateFormatter.date(from: startDateString) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: [CodingKeys.start], debugDescription: "Invalid startDate date formatting"))
+        }
+        startDate = formattedStartDate
+
+        let duration = try container.decode(Double.self, forKey: .duration)
+        endDate = startDate.addingTimeInterval(duration / 1000)
+
+        let urlString = try container.decode(String.self, forKey: .url)
+        guard let urlFromString = URL(string: urlString) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: [CodingKeys.url], debugDescription: "Invalid url"))
+        }
+        url = urlFromString
+    }
 
 
     /**
