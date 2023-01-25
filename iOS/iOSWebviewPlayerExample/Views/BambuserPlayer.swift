@@ -42,7 +42,7 @@ class BambuserPlayer: WKWebView {
     /// Load embeded player
     public func loadEmbeddedPlayer(_ show: EmbeddedPlayerUrl, eventHandler: @escaping EventHandlerClosure) throws {
         self.eventHandler = eventHandler
-        guard let showURL = show.showUrl() else {
+        guard let showURL = show.url else {
             throw BambuserPlayerError.invalidShowURL
         }
 
@@ -170,7 +170,7 @@ extension BambuserPlayer {
         case show(_ eventId: String)
         case customUrl(_ customUrl: String)
 
-        func showUrl() -> URL? {
+        var url: URL? {
             switch self {
             case .customUrl(let customUrl):
                 return URL(string: customUrl)
