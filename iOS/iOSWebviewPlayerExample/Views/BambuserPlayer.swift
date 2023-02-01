@@ -40,13 +40,10 @@ class BambuserPlayer: WKWebView {
     }
 
     /// Load embeded player
-    public func loadEmbeddedPlayer(_ show: EmbeddedPlayerUrl, eventHandler: @escaping EventHandlerClosure) throws {
+    public func loadEmbeddedPlayer(_ url: URL, eventHandler: @escaping EventHandlerClosure) throws {
         self.eventHandler = eventHandler
-        guard let showURL = show.url else {
-            throw BambuserPlayerError.invalidShowURL
-        }
 
-        load(URLRequest(url: showURL))
+        load(URLRequest(url: url))
     }
 }
 
@@ -162,21 +159,6 @@ extension BambuserPlayer: WKNavigationDelegate {
 // MARK: BambuserPlayer models
 
 extension BambuserPlayer {
-    enum EmbeddedPlayerUrl {
-        case show(_ eventId: String)
-        case customUrl(_ customUrl: String)
-
-        var url: URL? {
-            switch self {
-            case .customUrl(let customUrl):
-                return URL(string: customUrl)
-            case .show(let eventId):
-                // Change this base-URL to the correct one for your environment.
-                return URL(string: "https://demo.bambuser.shop/content/webview-landing-v2.html?eventId=\(eventId)")
-            }
-        }
-    }
-
     enum BambuserPlayerError: Error {
         case invalidShowURL
     }
