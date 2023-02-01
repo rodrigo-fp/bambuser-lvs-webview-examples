@@ -8,7 +8,7 @@
 import WebKit
 
 class BambuserPlayer: WKWebView {
-    typealias EventHandlerClosure = (Event) -> ()
+    typealias EventHandlerClosure = (_ name: String, _ data: Any?) -> ()
 
     var eventHandler: EventHandlerClosure?
 
@@ -64,13 +64,9 @@ extension BambuserPlayer: WKScriptMessageHandler, WKUIDelegate {
             return
         }
 
-        // Check all available events on our Player API Reference
-        // https://bambuser.com/docs/one-to-many/player-api-reference/
-        // Here we only handled the following  'player.EVENT.READY' and 'player.EVENT.CLOSE' events as for example.
-
         guard let eventName = body["eventName"] as? String else { return }
 
-        eventHandler?(Event(eventName: eventName, data: body["data"]))
+        eventHandler?(eventName, body["data"])
     }
 
     /// This function is used to communicate message to the JS
@@ -177,29 +173,6 @@ extension BambuserPlayer {
             case .show(let eventId):
                 // Change this base-URL to the correct one for your environment.
                 return URL(string: "https://demo.bambuser.shop/content/webview-landing-v2.html?eventId=\(eventId)")
-            }
-        }
-    }
-
-    enum Event {
-        case close
-        case ready
-        case addToCalendar(CalendarEvent?)
-        case share(URL?)
-        case showProduct(ProductModel?)
-        case unknown(eventName: String)
-
-        init(eventName: String, data: Any? = nil) {
-            let eventNameSuffix = eventName.replacingOccurrences(of: "player.EVENT.", with: "")
-            let dataDict = data as? [String: AnyObject]
-
-            switch eventNameSuffix {
-            case "CLOSE": self = .close
-            case "READY": self = .ready
-            case "SHOW_ADD_TO_CALENDAR": self = .addToCalendar(dataDict?.decode(CalendarEvent.self))
-            case "SHOW_SHARE": self = .share(URL(string: (dataDict?["url"] as? String) ?? ""))
-            case "SHOW_PRODUCT_VIEW": self = .showProduct(dataDict?.decode(ProductModel.self))
-            default: self = .unknown(eventName: eventName)
             }
         }
     }

@@ -50,24 +50,36 @@ class BambuserViewController: UIViewController {
         }
     }
 
-    func handleEvent(_ event: BambuserPlayer.Event) {
-        switch event {
-        case .close:
+    func handleEvent(_ name: String, data: Any?) {
+        // Check all available events on our Player API Reference
+        // https://bambuser.com/docs/one-to-many/player-api-reference/
+        // Here we only handled the following  'player.EVENT.READY' and 'player.EVENT.CLOSE' events as for example.
+        let dataDictionary = data as? [String: AnyObject]
+
+        switch name {
+        case "player.EVENT.CLOSE":
             // Add your handler methods if needed
             // As an example we invoke the close() method
             close()
-        case .ready:
+        case "player.EVENT.READY":
             // Add your handler methods if needed
             // As an example we print a message when the 'player.EVENT.READY' is emitted
             print("Ready")
-        case .addToCalendar(let calendarEvent):
+        case "player.EVENT.SHOW_ADD_TO_CALENDAR":
+            let calendarEvent = dataDictionary?.decode(CalendarEvent.self)
             addToCalendar(calendarEvent)
-        case .share(let url):
+        case "player.EVENT.SHOW_SHARE":
+            guard
+                let urlString = dataDictionary?["url"] as? String,
+                let url = URL(string: urlString)
+            else { return }
+
             shareShow(url)
-        case .showProduct(let product):
+        case "player.EVENT.SHOW_PRODUCT_VIEW":
+            let product = dataDictionary?.decode(ProductModel.self)
             showProductView(product)
-        case .unknown(eventName: let eventName):
-            showAlert("eventName", "This event does not have a handler for event \(eventName)!")
+        default:
+            showAlert("eventName", "This event does not have a handler for event \(name)!")
         }
     }
 
