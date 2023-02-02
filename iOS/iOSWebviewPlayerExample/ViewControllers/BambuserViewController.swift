@@ -27,24 +27,21 @@ class BambuserViewController: UIViewController {
         // Here are a list of URLs to a sample embed page on different player states
         // Uncomment the one at a time for testing in different stats
 
+        // 1. Recorded show:
+        let url = URL(string: "https://demo.bambuser.shop/content/webview-landing-v2.html")
+
+        // 2. Live Show (fake live for testing chat)
+        //let url = URL(string: "https://demo.bambuser.shop/content/webview-landing-v2.html?mockLiveBambuser=true")
+
+        // 3. Countdown - Scheduled show:
+        //let url = URL(string: "https://demo.bambuser.shop/content/webview-landing-v2.html?eventId=2iduPdz2hn6UKd0eQmJq")
+
+        guard let url else {
+            return showAlert("Error", "Event has invalid URL")
+        }
+
         do {
-            // 1. Recorded show:
-//            try player.loadEmbeddedPlayer(
-//                URL(string: "https://demo.bambuser.shop/content/webview-landing-v2.html")!,
-//                eventHandler: { self.handleEvent($0) }
-//            )
-
-            // 2. Live Show (fake live for testing chat)
-            try player.loadEmbeddedPlayer(
-                URL(string: "https://demo.bambuser.shop/content/webview-landing-v2.html?mockLiveBambuser=true")!,
-                eventHandler: { self.handleEvent($0, data: $1) }
-            )
-
-            // 3. Countdown - Scheduled show:
-//            try player.loadEmbeddedPlayer(
-//                URL(string: https://demo.bambuser.shop/content/webview-landing-v2.html?eventId=2iduPdz2hn6UKd0eQmJq")!,
-//                eventHandler: { self.handleEvent($0) }
-//            )
+            try player.loadEmbeddedPlayer(url, eventHandler: handleEvent)
         } catch {
             showAlert("Error", "Event has no playback URL")
         }
