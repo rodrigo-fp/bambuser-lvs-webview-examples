@@ -27,47 +27,56 @@ class BambuserViewController: UIViewController {
         // Here are a list of URLs to a sample embed page on different player states
         // Uncomment the one at a time for testing in different stats
 
+        // 1. Recorded show:
+        let url = URL(string: "https://demo.bambuser.shop/content/webview-landing-v2.html")
+
+        // 2. Live Show (fake live for testing chat)
+        //let url = URL(string: "https://demo.bambuser.shop/content/webview-landing-v2.html?mockLiveBambuser=true")
+
+        // 3. Countdown - Scheduled show:
+        //let url = URL(string: "https://demo.bambuser.shop/content/webview-landing-v2.html?eventId=2iduPdz2hn6UKd0eQmJq")
+
+        guard let url else {
+            return showAlert("Error", "Event has invalid URL")
+        }
+
         do {
-            // 1. Recorded show:
-//            try player.loadEmbeddedPlayer(
-//                .customUrl("https://demo.bambuser.shop/content/webview-landing-v2.html"),
-//                eventHandler: { self.handleEvent($0) }
-//            )
-
-            // 2. Live Show (fake live for testing chat)
-            try player.loadEmbeddedPlayer(
-                .customUrl("https://demo.bambuser.shop/content/webview-landing-v2.html?mockLiveBambuser=true"),
-                eventHandler: { self.handleEvent($0) }
-            )
-
-            // 3. Countdown - Scheduled show:
-//            try player.loadEmbeddedPlayer(
-//                .show("2iduPdz2hn6UKd0eQmJq"),
-//                eventHandler: { self.handleEvent($0) }
-//            )
+            try player.loadEmbeddedPlayer(url, eventHandler: handleEvent)
         } catch {
             showAlert("Error", "Event has no playback URL")
         }
     }
 
-    func handleEvent(_ event: BambuserPlayer.Event) {
-        switch event {
-        case .close:
+    func handleEvent(_ name: String, data: Any?) {
+        // Check all available events on our Player API Reference
+        // https://bambuser.com/docs/one-to-many/player-api-reference/
+        // Here we only handled the following  'player.EVENT.READY' and 'player.EVENT.CLOSE' events as for example.
+        let dataDictionary = data as? [String: AnyObject]
+
+        switch name {
+        case "player.EVENT.CLOSE":
             // Add your handler methods if needed
             // As an example we invoke the close() method
             close()
-        case .ready:
+        case "player.EVENT.READY":
             // Add your handler methods if needed
             // As an example we print a message when the 'player.EVENT.READY' is emitted
             print("Ready")
-        case .addToCalendar(let calendarEvent):
+        case "player.EVENT.SHOW_ADD_TO_CALENDAR":
+            let calendarEvent = dataDictionary?.decode(CalendarEvent.self)
             addToCalendar(calendarEvent)
-        case .share(let url):
+        case "player.EVENT.SHOW_SHARE":
+            guard
+                let urlString = dataDictionary?["url"] as? String,
+                let url = URL(string: urlString)
+            else { return }
+
             shareShow(url)
-        case .showProduct(let product):
+        case "player.EVENT.SHOW_PRODUCT_VIEW":
+            let product = dataDictionary?.decode(ProductModel.self)
             showProductView(product)
-        case .unknown(eventName: let eventName):
-            showAlert("eventName", "This event does not have a handler for event \(eventName)!")
+        default:
+            showAlert("eventName", "This event does not have a handler for event \(name)!")
         }
     }
 
