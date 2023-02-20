@@ -33,15 +33,16 @@ class WebViewActivity : AppCompatActivity() {
 
         webView.apply {
             // Here are a list of URLs to a sample embed page on different player states
-            // Uncomment the one at a time for testing in different stats
+            // Uncomment one at a time to test different scenarios
+
             // 1. Recorded show
-//             loadUrl("https://demo.bambuser.shop/content/webview-landing-v2.html")
+            // loadUrl("https://demo.bambuser.shop/content/webview-landing-v2.html")
 
             // 2. Live Show (fake live to test chat)
-             loadUrl("https://demo.bambuser.shop/content/webview-landing-v2.html?mockLiveBambuser=true")
+            loadUrl("https://demo.bambuser.shop/content/webview-landing-v2.html?mockLiveBambuser=true")
 
             // 3. Countdown screen / Scheduled show
-//             loadUrl("https://demo.bambuser.shop/content/webview-landing-v2.html?eventId=2iduPdz2hn6UKd0eQmJq")
+            // loadUrl("https://demo.bambuser.shop/content/webview-landing-v2.html?eventId=2iduPdz2hn6UKd0eQmJq")
 
             settings.javaScriptEnabled = true
         }
