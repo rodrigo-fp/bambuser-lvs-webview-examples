@@ -21,20 +21,22 @@ class BambuserViewController: UIViewController {
         self.title = "Player"
         
         // MARK: Embed page to be rendered inside the webview
-        // Note that player configurations, picking up player events, and triggering the player are done within the embed page.
-        // You need to have a similar webpage
+        // Note that player configurations, registering event listeners for the player, 
+        //   and also initiating the player are done within the embed page.
+        // You need to create a similar page and render that in the WebView. 
+        // For inspiration, look at the example embed-html on the GitHub repo.
         
         // Here are a list of URLs to a sample embed page on different player states
-        // Uncomment the one at a time for testing in different stats
+        // Uncomment one at a time to test different scenarios
 
         // 1. Recorded show:
         let url = URL(string: "https://demo.bambuser.shop/content/webview-landing-v2.html")
 
-        // 2. Live Show (fake live for testing chat)
-        //let url = URL(string: "https://demo.bambuser.shop/content/webview-landing-v2.html?mockLiveBambuser=true")
+        // 2. Live Show (fake live for testing the chat)
+        // let url = URL(string: "https://demo.bambuser.shop/content/webview-landing-v2.html?mockLiveBambuser=true")
 
         // 3. Countdown - Scheduled show:
-        //let url = URL(string: "https://demo.bambuser.shop/content/webview-landing-v2.html?eventId=2iduPdz2hn6UKd0eQmJq")
+        // let url = URL(string: "https://demo.bambuser.shop/content/webview-landing-v2.html?eventId=2iduPdz2hn6UKd0eQmJq")
 
         guard let url else {
             return showAlert("Error", "Event has invalid URL")

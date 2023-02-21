@@ -24,11 +24,13 @@ class BambuserPlayer: WKWebView {
 
         // Make it fullscreen
         super.init(frame: .zero, configuration: webConfiguration)
+        
+        // Provide delegate object to manage navigations and events from the WebView
         navigationDelegate = self
         uiDelegate = self
 
         // Add ScriptMessageHandler
-        // Used to catch postMessage events from the webview
+        // Used to catch postMessage events from the WebView
         contentController.add(
             self,
             name: "bambuserEventHandler"

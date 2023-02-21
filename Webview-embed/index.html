@@ -1,4 +1,7 @@
 
+<!-- This code only work on a Webview on Android or iOS -->
+<!-- Error expected if run on desktop browsers -->
+<!-- Find out more on the README on the GitHub Repo /Webview-embed -->
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -8,7 +11,7 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, viewport-fit=cover"
     />
-    <title>(v2) Bambuser Live Video Shopping Embed Example</title>
+    <title>Bambuser Live Video Shopping Embed Example</title>
     <style>
       body {
         background: black;
@@ -190,20 +193,20 @@
         }
 
         // Read the showID from query params
-        var showId = getQueryParameterByName("eventId");
+        var showIdFromURL = getQueryParameterByName("eventId");
         
-        if (!showId) {
+        if (!showIdFromURL) {
           // Autoplays a default show
           window.initBambuserLiveShopping({
-            showId: "vAtJH3xevpYTLnf1oHao",
+            showId: "vAtJH3xevpYTLnf1oHao", 
             type: "overlay",
             disableClickOutsideBehavior: true, // Tapping on the loading spinner will not terminate the player
           });
         } else {
           window.initBambuserLiveShopping({
-            showId,
+            showId: showIdFromURL,
             type: "overlay",
-            disableClickOutsideBehavior: true,
+            disableClickOutsideBehavior: true, // Tapping on the loading spinner will not terminate the player
           });
         }
       })();
