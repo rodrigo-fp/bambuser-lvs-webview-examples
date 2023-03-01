@@ -30,13 +30,13 @@ class BambuserViewController: UIViewController {
         // Uncomment one at a time to test different scenarios
 
         // 1. Recorded show:
-        let url = URL(string: "https://demo.bambuser.shop/content/webview-landing-v2.html")
+        let url = URL(string: "https://bambuser.github.io/bambuser-lvs-webview-examples/index.html")
 
         // 2. Live Show (fake live for testing the chat)
-        // let url = URL(string: "https://demo.bambuser.shop/content/webview-landing-v2.html?mockLiveBambuser=true")
+        // let url = URL(string: "https://bambuser.github.io/bambuser-lvs-webview-examples/index.html?mockLiveBambuser=true")
 
         // 3. Countdown - Scheduled show:
-        // let url = URL(string: "https://demo.bambuser.shop/content/webview-landing-v2.html?eventId=2iduPdz2hn6UKd0eQmJq")
+        // let url = URL(string: "https://bambuser.github.io/bambuser-lvs-webview-examples/index.html?showId=2iduPdz2hn6UKd0eQmJq")
 
         guard let url else {
             return showAlert("Error", "Event has invalid URL")

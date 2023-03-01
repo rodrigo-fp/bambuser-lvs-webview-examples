@@ -36,13 +36,13 @@ class WebViewActivity : AppCompatActivity() {
             // Uncomment one at a time to test different scenarios
 
             // 1. Recorded show
-            // loadUrl("https://demo.bambuser.shop/content/webview-landing-v2.html")
+            loadUrl("https://bambuser.github.io/bambuser-lvs-webview-examples/index.html")
 
             // 2. Live Show (fake live to test chat)
-            loadUrl("https://demo.bambuser.shop/content/webview-landing-v2.html?mockLiveBambuser=true")
+            // loadUrl("https://bambuser.github.io/bambuser-lvs-webview-examples/index.html?mockLiveBambuser=true")
 
             // 3. Countdown screen / Scheduled show
-            // loadUrl("https://demo.bambuser.shop/content/webview-landing-v2.html?eventId=2iduPdz2hn6UKd0eQmJq")
+            // loadUrl("https://bambuser.github.io/bambuser-lvs-webview-examples/index.html?eventId=2iduPdz2hn6UKd0eQmJq")
 
             settings.javaScriptEnabled = true
         }
