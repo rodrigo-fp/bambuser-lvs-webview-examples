@@ -186,13 +186,13 @@
           };
           window.initBambuserLiveShopping.queue = [];
           var scriptNode = document.createElement("script");
-          // If you received a custom embed URL for your brand, replace the below URL by yours.
-          scriptNode["src"] =
-            "https://lcx-embed.bambuser.com/powered-by-bambuser-theme/embed.js";
+          // IMPORTANT! You may have a different embed script URL. 
+          // Check the embed code snippet on your dashboard. 
+          scriptNode["src"] = "https://lcx-embed.bambuser.com/default/embed.js";
           document.body.appendChild(scriptNode);
         }
 
-        // Read the showID from query params
+        // Read the showID from query params 
         var showIdFromURL = getQueryParameterByName("eventId");
         
         if (!showIdFromURL) {
