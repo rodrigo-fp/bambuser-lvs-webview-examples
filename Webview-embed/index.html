@@ -193,9 +193,10 @@
         }
 
         // Read the showID from query params 
-        var showIdFromURL = getQueryParameterByName("eventId");
+        // Example: https://example.com/live-webview.html?showId=XXXXXXXXXXXXX
+        var showIdFromUrl = getQueryParameterByName("showId") || getQueryParameterByName("eventId");
         
-        if (!showIdFromURL) {
+        if (!showIdFromUrl) {
           // Autoplays a default show
           window.initBambuserLiveShopping({
             showId: "vAtJH3xevpYTLnf1oHao", 
@@ -204,7 +205,7 @@
           });
         } else {
           window.initBambuserLiveShopping({
-            showId: showIdFromURL,
+            showId: showIdFromUrl,
             type: "overlay",
             disableClickOutsideBehavior: true, // Tapping on the loading spinner will not terminate the player
           });
