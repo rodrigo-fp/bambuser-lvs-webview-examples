@@ -116,7 +116,7 @@
 
           player.on(player.EVENT.EXITED_PICTURE_IN_PICTURE, () => {
             window.webkit.messageHandlers.WKScriptMessageHandler.postMessage({
-              'eventName': 'player.EVENT.EXIT_PIP',
+              eventName: "player.EVENT.EXIT_PIP",
             });
           });
 
