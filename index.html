@@ -114,6 +114,12 @@
             }
           });
 
+          player.on(player.EVENT.EXITED_PICTURE_IN_PICTURE, () => {
+            window.webkit.messageHandlers.WKScriptMessageHandler.postMessage({
+              'eventName': 'player.EVENT.EXIT_PIP',
+            });
+          });
+
           player.on(player.EVENT.SHOW_SHARE, (event, callback) => {
             console.log("SHOW_SHARE", event);
             if (isIos) {
