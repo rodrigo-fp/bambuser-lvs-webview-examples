@@ -104,6 +104,7 @@
           player.on(player.EVENT.SHOW_PRODUCT_VIEW, (event) => {
             console.log("SHOW_PRODUCT_VIEW", event);
             if (isIos) {
+              player.requestPictureInPicture();
               window.webkit.messageHandlers.bambuserEventHandler.postMessage({
                 eventName: "player.EVENT.SHOW_PRODUCT_VIEW",
                 data: event,
