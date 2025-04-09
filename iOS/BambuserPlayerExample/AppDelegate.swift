@@ -1,8 +1,8 @@
 //
 //  AppDelegate.swift
-//  WebviewPlayerExample
+//  BambuserPlayerExample
 //
-// Bambuser Webview Player Integration Example
+//  Created by RODRIGO FRANCISCO PABLO on 09/04/25.
 //
 
 import UIKit

@@ -7,8 +7,9 @@
 
 import WebKit
 
+typealias EventHandlerClosure = (_ name: String, _ data: Any?) -> ()
+
 class BambuserPlayer: WKWebView {
-    typealias EventHandlerClosure = (_ name: String, _ data: Any?) -> ()
 
     var eventHandler: EventHandlerClosure?
 
@@ -21,9 +22,12 @@ class BambuserPlayer: WKWebView {
         // Allow overlaying custom player components
         // Necessary to render Bambuser LiveShopping player
         webConfiguration.allowsInlineMediaPlayback = true
+        webConfiguration.allowsPictureInPictureMediaPlayback = true
 
         // Make it fullscreen
         super.init(frame: .zero, configuration: webConfiguration)
+        
+        self.allowsLinkPreview = true
         
         // Provide delegate object to manage navigations and events from the WebView
         navigationDelegate = self
@@ -31,10 +35,7 @@ class BambuserPlayer: WKWebView {
 
         // Add ScriptMessageHandler
         // Used to catch postMessage events from the WebView
-        contentController.add(
-            self,
-            name: "bambuserEventHandler"
-        )
+        contentController.add(self, name: "bambuserEventHandler")
     }
 
     required init?(coder: NSCoder) {

@@ -1,54 +1,46 @@
 //
-//  ViewController.swift
+//  MainViewController.swift
 //  WebviewPlayerExample
 //
 // Bambuser Webview Player Integration Example
 //
 
 import UIKit
-import WebKit
 
-class BambuserViewController: UIViewController {
+class MainViewController: UIViewController {
+    var liveVideoController: UIViewController?
     
-    var player = BambuserPlayer()
-
-    override func loadView() {
-        view = player
+    init() {
+        super.init(nibName: nil, bundle: nil)
+        self.title = "Main view"
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = "Player"
         
-        // MARK: Embed page to be rendered inside the webview
-        // Note that player configurations, registering event listeners for the player, 
-        //   and also initiating the player are done within the embed page.
-        // You need to create a similar page and render that in the WebView. 
-        // For inspiration, look at the example embed-html on the GitHub repo.
-        
-        // Here are a list of URLs to a sample embed page on different player states
-        // Uncomment one at a time to test different scenarios
-
-        // 1. Recorded show:
-        let url = URL(string: "https://bambuser.github.io/bambuser-lvs-webview-examples/index.html")
-
-        // 2. Live Show (fake live for testing the chat)
-        // let url = URL(string: "https://bambuser.github.io/bambuser-lvs-webview-examples/index.html?mockLiveBambuser=true")
-
-        // 3. Countdown - Scheduled show:
-        // let url = URL(string: "https://bambuser.github.io/bambuser-lvs-webview-examples/index.html?showId=2iduPdz2hn6UKd0eQmJq")
-
-        guard let url else {
-            return showAlert("Error", "Event has invalid URL")
-        }
-
-        do {
-            try player.loadEmbeddedPlayer(url, eventHandler: handleEvent)
-        } catch {
-            showAlert("Error", "Event has no playback URL")
-        }
+        let button = UIButton(frame: CGRect(x:0, y:0, width: 200, height:50))
+        button.center = view.center
+        button.setTitle("Open Live", for: .normal)
+        button.addTarget(self, action: #selector(playerButton), for: .touchUpInside)
+        view.addSubview(button)
     }
 
+    @objc
+    func playerButton() {
+        let bambuserController =  BambuserViewController()
+        bambuserController.eventHandler = handleEvent
+        
+        self.liveVideoController = bambuserController
+        self.present(liveVideoController!, animated: true)
+    }
+}
+
+// Bambuser Helpers
+extension MainViewController {
     func handleEvent(_ name: String, data: Any?) {
         // Check all available events on our Player API Reference
         // https://bambuser.com/docs/one-to-many/player-api-reference/
@@ -77,6 +69,8 @@ class BambuserViewController: UIViewController {
         case "player.EVENT.SHOW_PRODUCT_VIEW":
             let product = dataDictionary?.decode(ProductModel.self)
             showProductView(product)
+        case "player.EVENT.EXIT_PIP":
+            print("We should recover the poped view")
         default:
             showAlert("eventName", "This event does not have a handler for event \(name)!")
         }
@@ -115,17 +109,17 @@ class BambuserViewController: UIViewController {
         guard let product = product else { return }
 
         // Instantiate the product view controller and set the values
-        guard let pvc = storyboard?.instantiateViewController(identifier: "product") as? ProductViewController else { return }
+        let pvc = ProductViewController()
         pvc.productTitle = product.title
         pvc.productSKU = product.sku
 
-        // Present the product view controller
-        present(pvc, animated: true)
+        // liveVideoController?.dismiss(animated: true)
+        show(pvc, sender: nil)
     }
 }
 
 /// Player Interface Handler Methods
-extension BambuserViewController {
+extension UIViewController {
     func showAlert(_ title: String, _ message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertController.Style.alert)
         
